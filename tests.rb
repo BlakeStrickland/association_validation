@@ -75,6 +75,25 @@ class ApplicationTest < Minitest::Test
     assert wonders_of_basket_weaving.destroyed?
   end
 
+  def test_courses_have_many_students_dependent_restrict_with_error
+    racing_101 = Course.create(name: "Lets a go!")
+    mario = CourseStudent.create(student_id: 1)
+    luigi = CourseStudent.create(student_id: 2)
+    peach = CourseStudent.create(student_id: 3)
+    toad = CourseStudent.create(student_id: 4)
+
+    racing_101.course_students << mario
+    racing_101.course_students << luigi
+    racing_101.course_students << peach
+    racing_101.course_students << toad
+
+    assert_equal [mario, luigi, peach, toad], racing_101.course_students.all
+
+    racing_101.destroy
+
+    refute racing_101.destroyed?
+  end
+
 
 
 
