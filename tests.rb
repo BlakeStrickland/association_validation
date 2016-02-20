@@ -302,4 +302,16 @@ class ApplicationTest < Minitest::Test
 
     ApplicationMigration.migrate(:down)
   end
+
+  def test_lessons_with_in_class_assignments
+    ApplicationMigration.migrate(:up)
+
+    in_class_assignment = Assignment.create(name: "Ruby Ruby Ruby Ruby!")
+    lesson = Lesson.create(name: "Integrate databases with Ruby!")
+
+    lesson.in_class_assignment = in_class_assignment
+    assert Lesson.where(in_class_assignment_id: in_class_assignment.id)
+
+    ApplicationMigration.migrate(:down)
+  end
 end
