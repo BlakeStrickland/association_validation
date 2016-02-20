@@ -206,6 +206,7 @@ class ApplicationTest < Minitest::Test
     reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
     reading2 = Reading.create()
 
+    refute reading2.id
     assert_equal reading1.order_number, Reading.first.order_number
     assert_equal reading1.lesson_id, Reading.last.lesson_id
     assert_equal reading1.url, Reading.last.url
@@ -220,6 +221,7 @@ class ApplicationTest < Minitest::Test
     ruby = Course.create(course_code: 1, name: "Ruby")
     shouldnt_be_counted = Course.create()
 
+    refute shouldnt_be_counted.id
     assert_equal ruby, Course.first
     assert_equal ruby, Course.last
     assert_equal [ruby], Course.all
@@ -234,6 +236,7 @@ class ApplicationTest < Minitest::Test
     iron_yard = School.create(name: "The Iron Yard")
     shouldnt_be_counted = School.create()
 
+    refute shouldnt_be_counted.id
     assert_equal iron_yard, School.first
     assert_equal iron_yard, School.last
     assert_equal [iron_yard], School.all
@@ -248,11 +251,40 @@ class ApplicationTest < Minitest::Test
     spring = Term.create(name: "Spring", starts_on: "2016-01-09", ends_on: "2016-03-09", school_id: 1)
     shouldnt_be_counted = Term.create(name: "blah")
 
+    refute shouldnt_be_counted.id
     assert_equal spring, Term.first
     assert_equal spring, Term.last
     assert_equal [spring], Term.all
 
     ApplicationMigration.migrate(:down)
+  end
+
+  def test_user_must_have_first_name_last_name_and_email
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    blake = User.create(first_name: "Blake", last_name: "Strickland", email: "Myself@awesome.com")
+    shouldnt_be_counted = User.create(first_name: "Blah")
+
+    refute shouldnt_be_counted.id
+    assert_equal [blake], User.all
+
+    ApplicationMigration.migrate(:down)
+  end
+
+  def test_user_email_cannot_be_duplicated
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    blake = User.create(first_name: "Blake", last_name: "Strickland", email: "Myself@awesome.com")
+
+    blake2 = User.create(first_name: "Blake2", last_name: "Strickland2", email: "Myself@awesome.com")
+
+    refute blake2.id
+    assert_equal [blake], User.all
+
+    ApplicationMigration.migrate(:down)
+
   end
 
 end
