@@ -1,7 +1,5 @@
 Person A:
 
-Associate lessons with their pre_class_assignments (both directions).
-
 Validate that the Readings url must start with http:// or https://. Use a regular expression.
 Validate that the course_code is unique within a given term_id.
 Validate that the course_code starts with three letters and ends with three numbers. Use a regular expression.
@@ -12,4 +10,3 @@ Associate lessons with their in_class_assignments (both directions).
 
 Validate that the User's email has the appropriate form for an e-mail address. Use a regular expression.
 Validate that the User's photo_url must start with http:// or https://. Use a regular expression.
-Validate that the Assignment name is unique within a given course_id.

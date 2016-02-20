@@ -26,7 +26,6 @@ ApplicationMigration.migrate(:up)
 class ApplicationTest < Minitest::Test
 
   def test_truth
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     assert true
@@ -34,7 +33,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_schools_and_term_relation
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     school = School.create(name: "Education")
@@ -48,7 +46,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_lessons_have_readings_dependent_destroy
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
@@ -65,7 +62,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_term_has_many_courses_dependent_restrict
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     spring = Term.create(name: "Spring", starts_on: "2016-01-09", ends_on: "2016-03-09", school_id: 1)
@@ -81,7 +77,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_courses_has_many_lessons_dependent_destroy
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
@@ -96,7 +91,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_courses_have_many_students_dependent_restrict_with_error
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     racing_101 = Course.create(course_code: 1, name: "Lets a go!")
@@ -119,7 +113,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_courses_has_many_instructors_dependent_restrict_with_error
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     make_a_living_with_no_job = Course.create(course_code: 1, name: "Rupee farming")
@@ -135,7 +128,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_course_has_many_assignments_dependent_destroy
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     evil_plan = Course.create(course_code: 1, name: "muhahahaha")
@@ -150,7 +142,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_school_has_many_courses_through_terms
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     school = School.create(name: "The Iron Yard")
@@ -170,7 +161,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_course_has_many_readings_through_lessons
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     ruby = Course.create(course_code: 1, name: "Ruby")
@@ -187,7 +177,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_lessons_have_names
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
@@ -200,7 +189,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_readings_have_order_number_lesson_id_and_url
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
@@ -215,7 +203,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_courses_have_code_and_name
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     ruby = Course.create(course_code: 1, name: "Ruby")
@@ -230,7 +217,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_schools_must_have_names
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     iron_yard = School.create(name: "The Iron Yard")
@@ -245,7 +231,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_terms_must_have_name_start_on_end_on_and_school_id
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     spring = Term.create(name: "Spring", starts_on: "2016-01-09", ends_on: "2016-03-09", school_id: 1)
@@ -260,7 +245,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_user_must_have_first_name_last_name_and_email
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     blake = User.create(first_name: "Blake", last_name: "Strickland", email: "Myself@awesome.com")
@@ -273,7 +257,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_user_email_cannot_be_duplicated
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     blake = User.create(first_name: "Blake", last_name: "Strickland", email: "Myself@awesome.com")
@@ -287,7 +270,6 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_assignments_must_have_course_id_name_and_percent_of_grade
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     black_out_the_sun = Assignment.create(course_id: 1, name: "Eternal darkness", percent_of_grade: 0.80)
@@ -299,12 +281,24 @@ class ApplicationTest < Minitest::Test
   end
 
   def test_assignments_name_is_unique_with_given_course_id
-    begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
     black_out_the_sun = Assignment.create(course_id: 1, name: "Eternal darkness", percent_of_grade: 0.80)
+    black_out_the_sun2 = Assignment.create(course_id: 1, name: "Eternal darkness", percent_of_grade: 0.90)
+    black_out_the_sun3 = Assignment.create(course_id: 2, name: "Eternal darkness", percent_of_grade: 0.90)
 
-    black_out_the_sun = Assignment.create(course_id: 1, name: "Eternal darkness", percent_of_grade: 0.90)
+    assert_equal [black_out_the_sun, black_out_the_sun3], Assignment.all
+    ApplicationMigration.migrate(:down)
+  end
+
+  def test_lessons_with_pre_class_assignments
+    ApplicationMigration.migrate(:up)
+
+    pre_class_assignment = Assignment.create(name: "Ruby Ruby Ruby Ruby!")
+    lesson = Lesson.create(name: "Integrate databases with Ruby!")
+
+    lesson.pre_class_assignment = pre_class_assignment
+    assert Lesson.where(pre_class_assignment_id: pre_class_assignment.id)
 
     ApplicationMigration.migrate(:down)
   end
