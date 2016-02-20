@@ -12,5 +12,4 @@ Associate lessons with their in_class_assignments (both directions).
 
 Validate that the User's email has the appropriate form for an e-mail address. Use a regular expression.
 Validate that the User's photo_url must start with http:// or https://. Use a regular expression.
-Validate that Assignments have a course_id, name, and percent_of_grade.
 Validate that the Assignment name is unique within a given course_id.

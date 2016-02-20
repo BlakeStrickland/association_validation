@@ -298,4 +298,14 @@ class ApplicationTest < Minitest::Test
     ApplicationMigration.migrate(:down)
   end
 
+  def test_assignments_name_is_unique_with_given_course_id
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    black_out_the_sun = Assignment.create(course_id: 1, name: "Eternal darkness", percent_of_grade: 0.80)
+
+    black_out_the_sun = Assignment.create(course_id: 1, name: "Eternal darkness", percent_of_grade: 0.90)
+
+    ApplicationMigration.migrate(:down)
+  end
 end
