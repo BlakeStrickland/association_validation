@@ -139,7 +139,7 @@ class ApplicationTest < Minitest::Test
     ApplicationMigration.migrate(:up)
 
     evil_plan = Course.create(course_code: 1, name: "muhahahaha")
-    black_out_the_sun = Assignment.create(name: "Eternal darkness")
+    black_out_the_sun = Assignment.create(course_id: 1, name: "Eternal darkness", percent_of_grade: 0.80)
 
     evil_plan.assignments << black_out_the_sun
     assert_equal [black_out_the_sun], evil_plan.assignments.all
@@ -284,7 +284,18 @@ class ApplicationTest < Minitest::Test
     assert_equal [blake], User.all
 
     ApplicationMigration.migrate(:down)
+  end
 
+  def test_assignments_must_have_course_id_name_and_percent_of_grade
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    black_out_the_sun = Assignment.create(course_id: 1, name: "Eternal darkness", percent_of_grade: 0.80)
+    black_out_the_sun2 = Assignment.create(name: "Eternal darkness")
+
+    refute black_out_the_sun2.id
+    assert_equal [black_out_the_sun], Assignment.all
+    ApplicationMigration.migrate(:down)
   end
 
 end
