@@ -133,6 +133,19 @@ class ApplicationTest < Minitest::Test
     assert_equal [ruby, python, front_end].reverse, school.courses
   end
 
+  def test_course_has_many_readings_through_lessons
+    ruby = Course.create(name: "Ruby")
+    lesson = Lesson.create(name: "Integrate databases with Ruby!")
+    reading1 = Reading.create(caption: "How many dots can I get?")
+    reading2 = Reading.create(caption: "I've got a lovely bunch of cocodots, dootaledee")
+
+    lesson.readings << reading1
+    lesson.readings << reading2
+    ruby.lessons << lesson
+
+    assert_equal [reading1, reading2], ruby.readings
+
+  end
 
 
 
