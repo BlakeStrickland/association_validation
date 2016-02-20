@@ -2,6 +2,9 @@ class Lesson < ActiveRecord::Base
   has_many :readings, dependent: :destroy
   has_many :in_class_assignments, class_name: "Assignment", foreign_key: "in_class_assignment_id"
   belongs_to :course, dependent: :destroy
+
+  validates :name, presence: true
+
   delegate :code_and_name, to: :course, prefix: true
 
   scope :roots, -> { where("parent_lesson_id IS NULL") }

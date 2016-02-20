@@ -13,7 +13,6 @@ Person B:
 
 Associate lessons with their in_class_assignments (both directions).
 
-Set up a Course to have many readings through the Course's lessons.
 Validate that Schools must have name.
 Validate that Terms must have name, starts_on, ends_on, and school_id.
 Validate that the User has a first_name, a last_name, and an email.

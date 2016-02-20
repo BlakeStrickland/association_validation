@@ -41,8 +41,8 @@ class ApplicationTest < Minitest::Test
 
   def test_lessons_have_readings_dependent_destroy
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
-    reading1 = Reading.create(caption: "How many dots can I get?")
-    reading2 = Reading.create(caption: "I've got a lovely bunch of cocodots, dootaledee")
+    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
+    reading2 = Reading.create(order_number: 2, lesson_id: 2, url: "www.ruby-docs.org/amazeballs", caption: "I've got a lovely bunch of cocodots, dootaledee")
     lesson.readings << reading1
     lesson.readings << reading2
 
@@ -136,8 +136,8 @@ class ApplicationTest < Minitest::Test
   def test_course_has_many_readings_through_lessons
     ruby = Course.create(name: "Ruby")
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
-    reading1 = Reading.create(caption: "How many dots can I get?")
-    reading2 = Reading.create(caption: "I've got a lovely bunch of cocodots, dootaledee")
+    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
+    reading2 = Reading.create(order_number: 2, lesson_id: 2, url: "www.ruby-docs.org/awesome", caption: "I've got a lovely bunch of cocodots, dootaledee")
 
     lesson.readings << reading1
     lesson.readings << reading2
