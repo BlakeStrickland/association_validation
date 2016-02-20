@@ -117,7 +117,21 @@ class ApplicationTest < Minitest::Test
     assert evil_plan.destroyed?
   end
 
+  def test_school_has_many_courses_through_terms
+    school = School.create(name: "The Iron Yard")
+    term = Term.create()
+    ruby = Course.create(name: "Ruby")
+    python = Course.create(name: "Python")
+    front_end = Course.create(name: "Front End")
 
+    term.courses << ruby
+    term.courses << python
+    term.courses << front_end
+
+    school.terms << term
+
+    assert_equal [ruby, python, front_end].reverse, school.courses
+  end
 
 
 

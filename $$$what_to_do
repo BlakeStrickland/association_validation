@@ -1,7 +1,7 @@
 Person A:
 
-Associate assignments with courses (both directions). When a course is destroyed, its assignments should be automatically destroyed.
 Associate lessons with their pre_class_assignments (both directions).
+
 Set up a School to have many courses through the school's terms.
 Validate that Lessons have names.
 Validate that Readings must have an order_number, a lesson_id, and a url.
@@ -13,6 +13,7 @@ Validate that the course_code starts with three letters and ends with three numb
 Person B:
 
 Associate lessons with their in_class_assignments (both directions).
+
 Set up a Course to have many readings through the Course's lessons.
 Validate that Schools must have name.
 Validate that Terms must have name, starts_on, ends_on, and school_id.
