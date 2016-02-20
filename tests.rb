@@ -31,15 +31,15 @@ class ApplicationTest < Minitest::Test
 
   def test_schools_and_term_relation
     school = School.create(name: "Education")
-    fall = Term.create()
-    spring = Term.create()
+    fall = Term.create(name: "Fall")
+    spring = Term.create(name: "Spring")
     school.terms << fall
     school.terms << spring
 
     assert_equal [fall, spring], school.terms.all
   end
 
-  def test_lessons_have_readings
+  def test_lessons_have_readings_dependent_destroy
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
     reading1 = Reading.create(caption: "How many dots can I get?")
     reading2 = Reading.create(caption: "I've got a lovely bunch of cocodots, dootaledee")
@@ -52,7 +52,17 @@ class ApplicationTest < Minitest::Test
     assert lesson.destroyed?
   end
 
+  def test_term_has_many_courses_dependent_restrict
+    spring = Term.create(name: "Spring")
+    wonders_of_basket_weaving = Course.create(name: "Basket Weaving")
+    spring.courses << wonders_of_basket_weaving
 
+    assert_equal [wonders_of_basket_weaving], spring.courses.all
+
+    spring.destroy
+
+    refute spring.destroyed?
+  end
 
 
 

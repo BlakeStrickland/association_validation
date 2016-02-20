@@ -1,4 +1,5 @@
 class Term < ActiveRecord::Base
+  has_many :courses, dependent: :restrict_with_error
   belongs_to :school
   default_scope { order('ends_on DESC') }
 
