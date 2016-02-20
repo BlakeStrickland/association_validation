@@ -38,8 +38,8 @@ class ApplicationTest < Minitest::Test
     ApplicationMigration.migrate(:up)
 
     school = School.create(name: "Education")
-    fall = Term.create(name: "Fall")
-    spring = Term.create(name: "Spring")
+    fall = Term.create(name: "Fall", starts_on: "2016-01-09", ends_on: "2016-03-09", school_id: 1)
+    spring = Term.create(name: "Spring", starts_on: "2016-01-09", ends_on: "2016-03-09", school_id: 1)
     school.terms << fall
     school.terms << spring
 
@@ -68,7 +68,7 @@ class ApplicationTest < Minitest::Test
     begin ApplicationMigration.migrate(:down); rescue; end
     ApplicationMigration.migrate(:up)
 
-    spring = Term.create(name: "Spring")
+    spring = Term.create(name: "Spring", starts_on: "2016-01-09", ends_on: "2016-03-09", school_id: 1)
     wonders_of_basket_weaving = Course.create(course_code: 1, name: "Basket Weaving")
     spring.courses << wonders_of_basket_weaving
 
@@ -154,7 +154,7 @@ class ApplicationTest < Minitest::Test
     ApplicationMigration.migrate(:up)
 
     school = School.create(name: "The Iron Yard")
-    term = Term.create()
+    term = Term.create(name: "Spring", starts_on: "2016-01-09", ends_on: "2016-03-09", school_id: 1)
     ruby = Course.create(course_code: 1, name: "Ruby")
     python = Course.create(course_code: 2, name: "Python")
     front_end = Course.create(course_code: 3, name: "Front End")
@@ -195,6 +195,7 @@ class ApplicationTest < Minitest::Test
 
     assert_equal lesson, Lesson.first
     assert_equal lesson, Lesson.last
+    assert_equal [lesson], Lesson.all
     ApplicationMigration.migrate(:down)
   end
 
@@ -208,6 +209,7 @@ class ApplicationTest < Minitest::Test
     assert_equal reading1.order_number, Reading.first.order_number
     assert_equal reading1.lesson_id, Reading.last.lesson_id
     assert_equal reading1.url, Reading.last.url
+    assert_equal [reading1], Reading.all
     ApplicationMigration.migrate(:down)
   end
 
@@ -220,11 +222,37 @@ class ApplicationTest < Minitest::Test
 
     assert_equal ruby, Course.first
     assert_equal ruby, Course.last
+    assert_equal [ruby], Course.all
+
     ApplicationMigration.migrate(:down)
   end
 
+  def test_schools_must_have_names
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
 
+    iron_yard = School.create(name: "The Iron Yard")
+    shouldnt_be_counted = School.create()
 
+    assert_equal iron_yard, School.first
+    assert_equal iron_yard, School.last
+    assert_equal [iron_yard], School.all
 
+    ApplicationMigration.migrate(:down)
+  end
+
+  def test_terms_must_have_name_start_on_end_on_and_school_id
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    spring = Term.create(name: "Spring", starts_on: "2016-01-09", ends_on: "2016-03-09", school_id: 1)
+    shouldnt_be_counted = Term.create(name: "blah")
+
+    assert_equal spring, Term.first
+    assert_equal spring, Term.last
+    assert_equal [spring], Term.all
+
+    ApplicationMigration.migrate(:down)
+  end
 
 end
