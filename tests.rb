@@ -94,9 +94,28 @@ class ApplicationTest < Minitest::Test
     refute racing_101.destroyed?
   end
 
+  def test_courses_has_many_instructors_dependent_restrict_with_error
+    make_a_living_with_no_job = Course.create(name: "Rupee farming")
+    link = CourseInstructor.create(instructor_id: 1)
 
+    make_a_living_with_no_job.course_instructors << link
+    assert_equal [link], make_a_living_with_no_job.course_instructors.all
 
+    make_a_living_with_no_job.destroy
 
+    refute make_a_living_with_no_job.destroyed?
+  end
+
+  def test_course_has_many_assignments_dependent_destroy
+    evil_plan = Course.create(name: "muhahahaha")
+    black_out_the_sun = Assignment.create(name: "Eternal darkness")
+
+    evil_plan.assignments << black_out_the_sun
+    assert_equal [black_out_the_sun], evil_plan.assignments.all
+
+    evil_plan.destroy
+    assert evil_plan.destroyed?
+  end
 
 
 
