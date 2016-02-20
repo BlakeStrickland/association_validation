@@ -64,6 +64,18 @@ class ApplicationTest < Minitest::Test
     refute spring.destroyed?
   end
 
+  def test_courses_has_many_lessons_dependent_destroy
+    lesson = Lesson.create(name: "Integrate databases with Ruby!")
+    wonders_of_basket_weaving = Course.create(name: "Basket Weaving")
+    wonders_of_basket_weaving.lessons << lesson
+
+    assert_equal [lesson], wonders_of_basket_weaving.lessons.all
+
+    wonders_of_basket_weaving.destroy
+    assert wonders_of_basket_weaving.destroyed?
+  end
+
+
 
 
 
