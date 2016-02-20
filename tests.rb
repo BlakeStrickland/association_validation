@@ -26,10 +26,17 @@ ApplicationMigration.migrate(:up)
 class ApplicationTest < Minitest::Test
 
   def test_truth
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
     assert true
+    ApplicationMigration.migrate(:down)
   end
 
   def test_schools_and_term_relation
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
     school = School.create(name: "Education")
     fall = Term.create(name: "Fall")
     spring = Term.create(name: "Spring")
@@ -37,9 +44,13 @@ class ApplicationTest < Minitest::Test
     school.terms << spring
 
     assert_equal [fall, spring], school.terms.all
+    ApplicationMigration.migrate(:down)
   end
 
   def test_lessons_have_readings_dependent_destroy
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
     reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
     reading2 = Reading.create(order_number: 2, lesson_id: 2, url: "www.ruby-docs.org/amazeballs", caption: "I've got a lovely bunch of cocodots, dootaledee")
@@ -50,11 +61,15 @@ class ApplicationTest < Minitest::Test
     lesson.destroy
 
     assert lesson.destroyed?
+    ApplicationMigration.migrate(:down)
   end
 
   def test_term_has_many_courses_dependent_restrict
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
     spring = Term.create(name: "Spring")
-    wonders_of_basket_weaving = Course.create(name: "Basket Weaving")
+    wonders_of_basket_weaving = Course.create(course_code: 1, name: "Basket Weaving")
     spring.courses << wonders_of_basket_weaving
 
     assert_equal [wonders_of_basket_weaving], spring.courses.all
@@ -62,21 +77,29 @@ class ApplicationTest < Minitest::Test
     spring.destroy
 
     refute spring.destroyed?
+    ApplicationMigration.migrate(:down)
   end
 
   def test_courses_has_many_lessons_dependent_destroy
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
-    wonders_of_basket_weaving = Course.create(name: "Basket Weaving")
+    wonders_of_basket_weaving = Course.create(course_code: 1, name: "Basket Weaving")
     wonders_of_basket_weaving.lessons << lesson
 
     assert_equal [lesson], wonders_of_basket_weaving.lessons.all
 
     wonders_of_basket_weaving.destroy
     assert wonders_of_basket_weaving.destroyed?
+    ApplicationMigration.migrate(:down)
   end
 
   def test_courses_have_many_students_dependent_restrict_with_error
-    racing_101 = Course.create(name: "Lets a go!")
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    racing_101 = Course.create(course_code: 1, name: "Lets a go!")
     mario = CourseStudent.create(student_id: 1)
     luigi = CourseStudent.create(student_id: 2)
     peach = CourseStudent.create(student_id: 3)
@@ -92,10 +115,14 @@ class ApplicationTest < Minitest::Test
     racing_101.destroy
 
     refute racing_101.destroyed?
+    ApplicationMigration.migrate(:down)
   end
 
   def test_courses_has_many_instructors_dependent_restrict_with_error
-    make_a_living_with_no_job = Course.create(name: "Rupee farming")
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    make_a_living_with_no_job = Course.create(course_code: 1, name: "Rupee farming")
     link = CourseInstructor.create(instructor_id: 1)
 
     make_a_living_with_no_job.course_instructors << link
@@ -104,10 +131,14 @@ class ApplicationTest < Minitest::Test
     make_a_living_with_no_job.destroy
 
     refute make_a_living_with_no_job.destroyed?
+    ApplicationMigration.migrate(:down)
   end
 
   def test_course_has_many_assignments_dependent_destroy
-    evil_plan = Course.create(name: "muhahahaha")
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    evil_plan = Course.create(course_code: 1, name: "muhahahaha")
     black_out_the_sun = Assignment.create(name: "Eternal darkness")
 
     evil_plan.assignments << black_out_the_sun
@@ -115,14 +146,18 @@ class ApplicationTest < Minitest::Test
 
     evil_plan.destroy
     assert evil_plan.destroyed?
+    ApplicationMigration.migrate(:down)
   end
 
   def test_school_has_many_courses_through_terms
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
     school = School.create(name: "The Iron Yard")
     term = Term.create()
-    ruby = Course.create(name: "Ruby")
-    python = Course.create(name: "Python")
-    front_end = Course.create(name: "Front End")
+    ruby = Course.create(course_code: 1, name: "Ruby")
+    python = Course.create(course_code: 2, name: "Python")
+    front_end = Course.create(course_code: 3, name: "Front End")
 
     term.courses << ruby
     term.courses << python
@@ -130,11 +165,15 @@ class ApplicationTest < Minitest::Test
 
     school.terms << term
 
-    assert_equal [ruby, python, front_end].reverse, school.courses
+    assert_equal [ruby, python, front_end], school.courses
+    ApplicationMigration.migrate(:down)
   end
 
   def test_course_has_many_readings_through_lessons
-    ruby = Course.create(name: "Ruby")
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    ruby = Course.create(course_code: 1, name: "Ruby")
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
     reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
     reading2 = Reading.create(order_number: 2, lesson_id: 2, url: "www.ruby-docs.org/awesome", caption: "I've got a lovely bunch of cocodots, dootaledee")
@@ -144,10 +183,45 @@ class ApplicationTest < Minitest::Test
     ruby.lessons << lesson
 
     assert_equal [reading1, reading2], ruby.readings
-
+    ApplicationMigration.migrate(:down)
   end
 
+  def test_lessons_have_names
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
 
+    lesson = Lesson.create(name: "Integrate databases with Ruby!")
+    lesson2 = Lesson.create()
+
+    assert_equal lesson, Lesson.first
+    assert_equal lesson, Lesson.last
+    ApplicationMigration.migrate(:down)
+  end
+
+  def test_readings_have_order_number_lesson_id_and_url
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
+    reading2 = Reading.create()
+
+    assert_equal reading1.order_number, Reading.first.order_number
+    assert_equal reading1.lesson_id, Reading.last.lesson_id
+    assert_equal reading1.url, Reading.last.url
+    ApplicationMigration.migrate(:down)
+  end
+
+  def test_courses_have_code_and_name
+    begin ApplicationMigration.migrate(:down); rescue; end
+    ApplicationMigration.migrate(:up)
+
+    ruby = Course.create(course_code: 1, name: "Ruby")
+    shouldnt_be_counted = Course.create()
+
+    assert_equal ruby, Course.first
+    assert_equal ruby, Course.last
+    ApplicationMigration.migrate(:down)
+  end
 
 
 

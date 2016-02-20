@@ -6,6 +6,10 @@ class Course < ActiveRecord::Base
   has_many :course_instructors, dependent: :restrict_with_error
   has_many :assignments, dependent: :destroy
   has_many :readings, through: :lessons
+
+  validates :course_code, presence: true
+  validates :name, presence: true
+
   default_scope { order("courses.term_id DESC, courses.course_code, courses.id DESC") }
 
   # Magic number also used in old? method below.
