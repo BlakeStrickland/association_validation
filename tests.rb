@@ -336,4 +336,17 @@ class ApplicationTest < Minitest::Test
 
     ApplicationMigration.migrate(:down)
   end
+
+  def test_course_codes_must_be_unique_through_term_id
+    ApplicationMigration.migrate(:up)
+
+    ruby = Course.create(course_code: 1, name: "Ruby")
+    ruby2 = Course.create(course_code: 1, name: "Ruby2s")
+    python = Course.create(course_code: 2, name: "Python")
+    front_end = Course.create(course_code: 3, name: "Front End")
+
+    refute ruby2.id
+    assert_equal [ruby, python, front_end], Course.all
+    ApplicationMigration.migrate(:down)
+  end
 end

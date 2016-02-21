@@ -8,6 +8,7 @@ class Course < ActiveRecord::Base
   has_many :readings, through: :lessons
 
   validates :course_code, presence: true
+  validates :course_code, uniqueness: {:scope => :term_id}
   validates :name, presence: true
 
   default_scope { order("courses.term_id DESC, courses.course_code, courses.id DESC") }
