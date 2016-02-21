@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :on => :create
   validates :email, uniqueness: true
   validates :email, presence: true
+  validates_format_of :photo_url, :with => /(http|https):\/\//, allow_blank: true
+
 
   scope :want_to_be_instructors, -> { where(wants_to_be_instructor: true) }
   scope :instructors_for_school_id, ->(school_id) { where(school_id: school_id, instructor: true) }

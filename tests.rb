@@ -365,4 +365,16 @@ class ApplicationTest < Minitest::Test
 
     ApplicationMigration.migrate(:down)
   end
+
+  def test_user_photo_url_must_start_with_http_s
+    ApplicationMigration.migrate(:up)
+
+    blake = User.create(first_name: "Blake", last_name: "Strickland", email: "Myself@awesome.com", photo_url: "http://www.TIY.com")
+    blake2 = User.create(first_name: "Blake", last_name: "Strickland", email: "Myself@awesome.com", photo_url: "www.TIY.com")
+    blake3 = User.create(first_name: "Blake", last_name: "Strickland", email: "Myself@awesome2.com", photo_url: "https://www.TIY.com")
+
+    refute blake2.id
+    assert_equal [blake, blake3], User.all
+    ApplicationMigration.migrate(:down)
+  end
 end
