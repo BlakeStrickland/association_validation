@@ -49,8 +49,8 @@ class ApplicationTest < Minitest::Test
     ApplicationMigration.migrate(:up)
 
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
-    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
-    reading2 = Reading.create(order_number: 2, lesson_id: 2, url: "www.ruby-docs.org/amazeballs", caption: "I've got a lovely bunch of cocodots, dootaledee")
+    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "https://www.ruby-docs.org", caption: "How many dots can I get?")
+    reading2 = Reading.create(order_number: 2, lesson_id: 2, url: "https://www.ruby-docs.org/amazeballs", caption: "I've got a lovely bunch of cocodots, dootaledee")
     lesson.readings << reading1
     lesson.readings << reading2
 
@@ -165,8 +165,8 @@ class ApplicationTest < Minitest::Test
 
     ruby = Course.create(course_code: 1, name: "Ruby")
     lesson = Lesson.create(name: "Integrate databases with Ruby!")
-    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
-    reading2 = Reading.create(order_number: 2, lesson_id: 2, url: "www.ruby-docs.org/awesome", caption: "I've got a lovely bunch of cocodots, dootaledee")
+    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "https://www.ruby-docs.org", caption: "How many dots can I get?")
+    reading2 = Reading.create(order_number: 2, lesson_id: 2, url: "https://www.ruby-docs.org/awesome", caption: "I've got a lovely bunch of cocodots, dootaledee")
 
     lesson.readings << reading1
     lesson.readings << reading2
@@ -191,7 +191,7 @@ class ApplicationTest < Minitest::Test
   def test_readings_have_order_number_lesson_id_and_url
     ApplicationMigration.migrate(:up)
 
-    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "www.ruby-docs.org", caption: "How many dots can I get?")
+    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "https://www.ruby-docs.org", caption: "How many dots can I get?")
     reading2 = Reading.create()
 
     refute reading2.id
@@ -323,7 +323,17 @@ class ApplicationTest < Minitest::Test
 
     refute blake2.id
     assert_equal [blake], User.all
-    
+
+    ApplicationMigration.migrate(:down)
+  end
+
+  def test_readings_must_have_valid_url
+    ApplicationMigration.migrate(:up)
+
+    reading1 = Reading.create(order_number: 1, lesson_id: 1, url: "http://www.ruby-docs.org", caption: "How many dots can I get?")
+    reading2 = Reading.create(order_number: 2, lesson_id: 2, url: "https://www.ruby-docs.org/iforgetwhatimdoing", caption: "Another dot?")
+    reading3 = Reading.create(order_number: 3, lesson_id: 3, url: "www.ruby-docs.org", caption: "How many dots can I get?")
+
     ApplicationMigration.migrate(:down)
   end
 end
