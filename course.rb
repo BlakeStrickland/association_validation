@@ -9,6 +9,8 @@ class Course < ActiveRecord::Base
 
   validates :course_code, presence: true
   validates :course_code, uniqueness: {:scope => :term_id}
+  validates_format_of :course_code, :with => /\b\D{3}\W\d{3}\b/, :on => :create
+
   validates :name, presence: true
 
   default_scope { order("courses.term_id DESC, courses.course_code, courses.id DESC") }
