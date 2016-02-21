@@ -314,4 +314,16 @@ class ApplicationTest < Minitest::Test
 
     ApplicationMigration.migrate(:down)
   end
+
+  def test_valid_email_using_reg_ex
+    ApplicationMigration.migrate(:up)
+
+    blake = User.create(first_name: "Blake", last_name: "Strickland", email: "Myself@awesome.com")
+    blake2 = User.create(first_name: "Blake", last_name: "Strickland", email: "Myself$awesome.com")
+
+    refute blake2.id
+    assert_equal [blake], User.all
+    
+    ApplicationMigration.migrate(:down)
+  end
 end
