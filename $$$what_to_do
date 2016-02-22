@@ -1,0 +1,12 @@
+Person A:
+
+Associate course_instructors with instructors (who happen to be users)
+Associate assignments with assignment_grades (both directions)
+Set up a Course to have many instructors through the Course's course_instructors.
+Validate that an Assignment's due_at field is not before the Assignment's active_at.
+Person B:
+
+Associate CourseStudents with students (who happen to be users)
+Associate CourseStudents with assignment_grades (both directions)
+Set up a Course to have many students through the course's course_students.
+Associate a Course with its ONE primary_instructor. This primary instructor is the one who is referenced by a course_instructor which has its primary flag set to true.
